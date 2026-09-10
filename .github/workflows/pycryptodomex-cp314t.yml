@@ -1,0 +1,29 @@
+name: Build pycryptodomex CPython 3.14t Windows x64
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: pycryptodomex cp314t win_amd64
+    runs-on: windows-2025
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build CPython 3.14t wheel
+        uses: pypa/cibuildwheel@v3.4.1
+        env:
+          CIBW_BUILD: "cp314t-win_amd64"
+          CIBW_ARCHS_WINDOWS: "AMD64"
+
+      - name: Show result
+        shell: bash
+        run: |
+          find wheelhouse -type f -name '*.whl' -print
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pycryptodomex-cp314t-win_amd64
+          path: wheelhouse/*.whl
+          if-no-files-found: error
